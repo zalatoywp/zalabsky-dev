@@ -111,7 +111,7 @@ const RepoWalker: FC<{}> = () =>
         mode: "no-cors",
         method: "GET",
         headers: {
-          "allow-access-control-origin": "*",
+          "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
         }
       }
@@ -188,7 +188,7 @@ const RepoWalker: FC<{}> = () =>
           mode: "no-cors",
           method: "GET",
           headers: {
-            "allow-access-control-origin": "*",
+            "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json",
           }
         }
@@ -227,9 +227,11 @@ const RepoWalker: FC<{}> = () =>
     dids = dids.map((did) => did.toLowerCase());
     try {
       const resp = await fetch(`https://plc.jazco.io/batch/by_did`, {
+        mode: "no-cors",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify(dids),
       });
@@ -277,7 +279,7 @@ const RepoWalker: FC<{}> = () =>
           mode: "no-cors",
           method: "GET",
           headers: {
-            "allow-access-control-origin": "*",
+            "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json",
           }
         }

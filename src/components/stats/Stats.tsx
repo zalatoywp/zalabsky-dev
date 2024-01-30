@@ -90,12 +90,13 @@ const Stats: FC<NonNullable<unknown>> = () =>
   {
     fetch(`https://bsky-search.jazco.io/stats`, {
       method: "GET",
-      mode: "cors",
+      mode: "no-cors",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-      },
-    },)
+      }
+    },
+    )
       .then((res) => res.json())
       .then((res: AuthorStatsResponse) =>
       {
