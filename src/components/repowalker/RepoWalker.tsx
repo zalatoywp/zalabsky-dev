@@ -86,7 +86,7 @@ const RepoWalker: FC<{}> = () =>
 
   useEffect(() =>
   {
-    document.title = "Bluesky Repo Walker";
+    document.title = "zalabsky";
   }, []);
 
   useEffect(() =>
@@ -107,7 +107,15 @@ const RepoWalker: FC<{}> = () =>
     setLoading(true);
     setError("");
     try {
-      const resp = await fetch(`https://bsky-search.jazco.io/repo/${repoDid}`);
+      const resp = await fetch(`https://bsky-search.jazco.io/repo/${repoDid}`, {
+        mode: "no-cors",
+        method: "GET",
+        headers: {
+          "allow-access-control-origin": "*",
+          "Content-Type": "application/json",
+        }
+      }
+      );
 
       // Check for non-200 status codes.
       if (!resp.ok) {
@@ -176,7 +184,15 @@ const RepoWalker: FC<{}> = () =>
     } else {
       try {
         const resp = await fetch(
-          `https://plc.jazco.io/${handleOrDid.toLowerCase()}`
+          `https://plc.jazco.io/${handleOrDid.toLowerCase()}`, {
+          mode: "no-cors",
+          method: "GET",
+          headers: {
+            "allow-access-control-origin": "*",
+            "Content-Type": "application/json",
+          }
+        }
+
         );
 
         if (!resp.ok) {
@@ -257,7 +273,14 @@ const RepoWalker: FC<{}> = () =>
     } else {
       try {
         const resp = await fetch(
-          `https://plc.jazco.io/${candidate.toLowerCase()}`
+          `https://plc.jazco.io/${candidate.toLowerCase()}`, {
+          mode: "no-cors",
+          method: "GET",
+          headers: {
+            "allow-access-control-origin": "*",
+            "Content-Type": "application/json",
+          }
+        }
         );
 
         if (!resp.ok) {

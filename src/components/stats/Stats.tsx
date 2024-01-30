@@ -77,7 +77,7 @@ const Stats: FC<NonNullable<unknown>> = () =>
 
   useEffect(() =>
   {
-    document.title = "Zalabsky Dev Tools";
+    document.title = "Zalabsky";
   }, []);
 
   const getMillionString = (num: number) =>
@@ -88,7 +88,14 @@ const Stats: FC<NonNullable<unknown>> = () =>
 
   const refreshStats = () =>
   {
-    fetch(`https://bsky-search.jazco.io/stats`)
+    fetch(`https://bsky-search.jazco.io/stats`, {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    },)
       .then((res) => res.json())
       .then((res: AuthorStatsResponse) =>
       {
