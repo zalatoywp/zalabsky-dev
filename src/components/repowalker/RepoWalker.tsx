@@ -108,10 +108,11 @@ const RepoWalker: FC<{}> = () =>
     setError("");
     try {
       const resp = await fetch(`https://bsky-search.jazco.io/repo/${repoDid}`, {
-
         mode: "no-cors",
-        method: "POST",
+        method: "GET",
         headers: {
+          "site": "cross-site",
+          "accept": "*/*",
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
         }
@@ -187,8 +188,10 @@ const RepoWalker: FC<{}> = () =>
         const resp = await fetch(
           `https://plc.jazco.io/${handleOrDid.toLowerCase()}`, {
           mode: "no-cors",
-          method: "POST",
+          method: "GET",
           headers: {
+            "site": "cross-site",
+            "accept": "*/*",
             "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json",
           }
@@ -229,8 +232,10 @@ const RepoWalker: FC<{}> = () =>
     try {
       const resp = await fetch(`https://plc.jazco.io/batch/by_did`, {
         mode: "no-cors",
-        method: "POST",
+        method: "GET",
         headers: {
+          "site": "cross-site",
+          "accept": "*/*",
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
@@ -278,8 +283,10 @@ const RepoWalker: FC<{}> = () =>
         const resp = await fetch(
           `https://plc.jazco.io/${candidate.toLowerCase()}`, {
           mode: "no-cors",
-          method: "POST",
+          method: "GET",
           headers: {
+            "site": "cross-site",
+            "accept": "*/*",
             "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json",
           }
