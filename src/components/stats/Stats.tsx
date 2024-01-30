@@ -88,9 +88,9 @@ const Stats: FC<NonNullable<unknown>> = () =>
 
   const refreshStats = () =>
   {
-    fetch(`https://api.bsky-search.jazco.io/stats`, {
+    fetch(`https://bsky-search.jazco.io/stats`, {
       method: "GET",
-      mode: "no-cors",
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
