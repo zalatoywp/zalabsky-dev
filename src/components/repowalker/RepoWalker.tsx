@@ -107,17 +107,8 @@ const RepoWalker: FC<{}> = () =>
     setLoading(true);
     setError("");
     try {
-      const resp = await fetch(`https://bsky-search.jazco.io/repo/${repoDid}`, {
-        mode: "no-cors",
-        method: "GET",
-        headers: {
-          "site": "cross-site",
-          "accept": "*/*",
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        }
-      }
-      );
+      const resp = await fetch(`https://bsky-search.jazco.io/repo/${repoDid}`);
+
 
       // Check for non-200 status codes.
       if (!resp.ok) {
@@ -138,7 +129,7 @@ const RepoWalker: FC<{}> = () =>
       if ("error" in repoData) {
         throw new Error(repoData.error);
       }
-
+      console.log(repoData);
       const dids: Set<string> = new Set();
       if (repoData.likes && repoData.likes.length > 0) {
         for (let i = 0; i < repoData.likes.length; i++) {
@@ -186,17 +177,7 @@ const RepoWalker: FC<{}> = () =>
     } else {
       try {
         const resp = await fetch(
-          `https://plc.jazco.io/${handleOrDid.toLowerCase()}`, {
-          mode: "no-cors",
-          method: "GET",
-          headers: {
-            "site": "cross-site",
-            "accept": "*/*",
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json",
-          }
-        }
-
+          `https://plc.jazco.io/${handleOrDid.toLowerCase()}`
         );
 
         if (!resp.ok) {
@@ -231,13 +212,9 @@ const RepoWalker: FC<{}> = () =>
     dids = dids.map((did) => did.toLowerCase());
     try {
       const resp = await fetch(`https://plc.jazco.io/batch/by_did`, {
-        mode: "no-cors",
-        method: "GET",
+        method: "POST",
         headers: {
-          "site": "cross-site",
-          "accept": "*/*",
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify(dids),
       });
@@ -281,16 +258,7 @@ const RepoWalker: FC<{}> = () =>
     } else {
       try {
         const resp = await fetch(
-          `https://plc.jazco.io/${candidate.toLowerCase()}`, {
-          mode: "no-cors",
-          method: "GET",
-          headers: {
-            "site": "cross-site",
-            "accept": "*/*",
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json",
-          }
-        }
+          `https://bsky.social/xrpc/com.atproto.repo.describeRepo?repo=${candidate.toLowerCase()}`
         );
 
         if (!resp.ok) {
@@ -310,11 +278,14 @@ const RepoWalker: FC<{}> = () =>
         }
 
         const didData = await resp.json();
+
         repoDid = didData.did;
+        console.log(repoDid);
       } catch (e: any) {
         setError(e.message);
         setLoading(false);
         return "";
+
       }
     }
     return repoDid;
