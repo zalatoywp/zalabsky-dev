@@ -1,6 +1,5 @@
 // import { CloudArrowDownIcon } from "@heroicons/react/24/solid";
 import { FC, useEffect, useState } from "react";
-import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import ErrorMsg from "../threads/ErrorMsg";
 
@@ -108,15 +107,14 @@ const RepoWalker: FC<{}> = () =>
     setLoading(true);
     setError("");
     try {
-      const resp = await axios.get(`https://bsky-search.jazco.io/repo/${repoDid}`
-      );
+      const resp = await fetch(`https://bsky-search.jazco.io/repo/${repoDid}`);
 
 
       // Check for non-200 status codes.
-      if (resp.status !== 200) {
+      if (!resp.ok) {
         let errorMsg = "An error occurred while fetching the repository.";
         try {
-          const errorData = resp.data;
+          const errorData = await resp.json();
           // Use the error message from the server if available.
           if ("error" in errorData) {
             errorMsg = errorData.error;
@@ -127,7 +125,7 @@ const RepoWalker: FC<{}> = () =>
         throw new Error(errorMsg);
       }
 
-      const repoData = await resp.data;
+      const repoData = await resp.json();
       if ("error" in repoData) {
         throw new Error(repoData.error);
       }
@@ -178,14 +176,14 @@ const RepoWalker: FC<{}> = () =>
       repoDid = handleOrDid;
     } else {
       try {
-        const resp = await axios.get(
+        const resp = await fetch(
           `https://plc.jazco.io/${handleOrDid.toLowerCase()}`
         );
 
-        if (resp.status !== 200) {
+        if (!resp.ok) {
           let errorMsg = "An error occurred while resolving the handle.";
           try {
-            const errorData = await resp.data;
+            const errorData = await resp.json();
             if ("error" in errorData) {
               errorMsg = errorData.error;
               if (errorMsg === "redis: nil") {
@@ -198,7 +196,7 @@ const RepoWalker: FC<{}> = () =>
           throw new Error(errorMsg);
         }
 
-        const didData = await resp.data;
+        const didData = await resp.json();
         repoDid = didData.did;
       } catch (e: any) {
         setError(e.message);
@@ -259,14 +257,14 @@ const RepoWalker: FC<{}> = () =>
       repoDid = candidate;
     } else {
       try {
-        const resp = await axios.get(
+        const resp = await fetch(
           `https://bsky.social/xrpc/com.atproto.repo.describeRepo?repo=${candidate.toLowerCase()}`
         );
 
-        if (resp.status !== 200) {
+        if (!resp.ok) {
           let errorMsg = "An error occurred while resolving the handle.";
           try {
-            const errorData = await resp.data;
+            const errorData = await resp.json();
             if ("error" in errorData) {
               errorMsg = errorData.error;
               if (errorMsg === "redis: nil") {
@@ -279,7 +277,7 @@ const RepoWalker: FC<{}> = () =>
           throw new Error(errorMsg);
         }
 
-        const didData = await resp.data;
+        const didData = await resp.json();
 
         repoDid = didData.did;
 
