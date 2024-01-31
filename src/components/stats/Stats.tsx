@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import ErrorMsg from "../threads/ErrorMsg";
 import { Col, DailyDatapoint, DataVolumeBarChart } from "./Charts";
 import CountUp from "react-countup";
+import axios from "axios";
 
 interface Percentile
 {
@@ -88,8 +89,8 @@ const Stats: FC<NonNullable<unknown>> = () =>
 
   const refreshStats = () =>
   {
-    fetch(`https://bsky-search.jazco.io/stats`)
-      .then((res) => res.json())
+    axios.get(`https://bsky-search.jazco.io/stats`)
+      .then((res) => res.data)
       .then((res: AuthorStatsResponse) =>
       {
         // If the response has an updated_at from the future, set it to a second ago

@@ -1,5 +1,6 @@
 // import { CloudArrowDownIcon } from "@heroicons/react/24/solid";
 import { FC, useEffect, useState } from "react";
+import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import ErrorMsg from "../threads/ErrorMsg";
 
@@ -107,14 +108,14 @@ const RepoWalker: FC<{}> = () =>
     setLoading(true);
     setError("");
     try {
-      const resp = await fetch(`https://bsky-search.jazco.io/repo/${repoDid}`);
+      const resp = await axios.get(`https://bsky-search.jazco.io/repo/${repoDid}`);
 
 
       // Check for non-200 status codes.
-      if (!resp.ok) {
+      if (resp.status !== 200) {
         let errorMsg = "An error occurred while fetching the repository.";
         try {
-          const errorData = await resp.json();
+          const errorData = resp.data;
           // Use the error message from the server if available.
           if ("error" in errorData) {
             errorMsg = errorData.error;
@@ -125,7 +126,7 @@ const RepoWalker: FC<{}> = () =>
         throw new Error(errorMsg);
       }
 
-      const repoData = await resp.json();
+      const repoData = await resp.data;
       if ("error" in repoData) {
         throw new Error(repoData.error);
       }
@@ -176,14 +177,14 @@ const RepoWalker: FC<{}> = () =>
       repoDid = handleOrDid;
     } else {
       try {
-        const resp = await fetch(
+        const resp = await axios.get(
           `https://plc.jazco.io/${handleOrDid.toLowerCase()}`
         );
 
-        if (!resp.ok) {
+        if (resp.status !== 200) {
           let errorMsg = "An error occurred while resolving the handle.";
           try {
-            const errorData = await resp.json();
+            const errorData = await resp.data;
             if ("error" in errorData) {
               errorMsg = errorData.error;
               if (errorMsg === "redis: nil") {
@@ -196,7 +197,7 @@ const RepoWalker: FC<{}> = () =>
           throw new Error(errorMsg);
         }
 
-        const didData = await resp.json();
+        const didData = await resp.data;
         repoDid = didData.did;
       } catch (e: any) {
         setError(e.message);
@@ -211,17 +212,17 @@ const RepoWalker: FC<{}> = () =>
   {
     dids = dids.map((did) => did.toLowerCase());
     try {
-      const resp = await fetch(`https://plc.jazco.io/batch/by_did`, {
+      const resp = await axios.post(`https://plc.jazco.io/batch/by_did`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(dids),
       });
-      if (!resp.ok) {
+      if (resp.status !== 200) {
         let errorMsg = "An error occurred while resolving the handle.";
         try {
-          const errorData = await resp.json();
+          const errorData = await resp.data;
           if ("error" in errorData) {
             errorMsg = errorData.error;
             if (errorMsg === "redis: nil") {
@@ -234,7 +235,7 @@ const RepoWalker: FC<{}> = () =>
         throw new Error(errorMsg);
       }
 
-      const didData: any[] = await resp.json();
+      const didData: any[] = await resp.data;
       didData?.forEach((doc) =>
       {
         handles.set(doc.did, doc.handle);
@@ -257,14 +258,14 @@ const RepoWalker: FC<{}> = () =>
       repoDid = candidate;
     } else {
       try {
-        const resp = await fetch(
+        const resp = await axios.get(
           `https://bsky.social/xrpc/com.atproto.repo.describeRepo?repo=${candidate.toLowerCase()}`
         );
 
-        if (!resp.ok) {
+        if (resp.status !== 200) {
           let errorMsg = "An error occurred while resolving the handle.";
           try {
-            const errorData = await resp.json();
+            const errorData = await resp.data;
             if ("error" in errorData) {
               errorMsg = errorData.error;
               if (errorMsg === "redis: nil") {
@@ -277,7 +278,7 @@ const RepoWalker: FC<{}> = () =>
           throw new Error(errorMsg);
         }
 
-        const didData = await resp.json();
+        const didData = await resp.data;
 
         repoDid = didData.did;
 
