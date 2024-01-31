@@ -280,7 +280,7 @@ const RepoWalker: FC<{}> = () =>
         const didData = await resp.json();
 
         repoDid = didData.did;
-        console.log(repoDid);
+
       } catch (e: any) {
         setError(e.message);
         setLoading(false);
