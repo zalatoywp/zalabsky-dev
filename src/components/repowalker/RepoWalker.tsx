@@ -212,17 +212,17 @@ const RepoWalker: FC<{}> = () =>
   {
     dids = dids.map((did) => did.toLowerCase());
     try {
-      const resp = await axios.post(`https://plc.jazco.io/batch/by_did`, {
+      const resp = await fetch(`https://plc.jazco.io/batch/by_did`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(dids),
       });
-      if (resp.status !== 200) {
+      if (!resp.ok) {
         let errorMsg = "An error occurred while resolving the handle.";
         try {
-          const errorData = await resp.data;
+          const errorData = await resp.json();
           if ("error" in errorData) {
             errorMsg = errorData.error;
             if (errorMsg === "redis: nil") {
@@ -235,7 +235,7 @@ const RepoWalker: FC<{}> = () =>
         throw new Error(errorMsg);
       }
 
-      const didData: any[] = await resp.data;
+      const didData: any[] = await resp.json();
       didData?.forEach((doc) =>
       {
         handles.set(doc.did, doc.handle);
