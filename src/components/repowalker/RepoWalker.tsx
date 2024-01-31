@@ -108,7 +108,8 @@ const RepoWalker: FC<{}> = () =>
     setLoading(true);
     setError("");
     try {
-      const resp = await axios.get(`https://bsky-search.jazco.io/repo/${repoDid}`);
+      const resp = await axios.get(`https://bsky-search.jazco.io/repo/${repoDid}`
+      );
 
 
       // Check for non-200 status codes.
